@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-<title>Mario Coach AI V14 Stable</title>
-<link rel="stylesheet" href="style.css?v=14-stable"/>
+<title>Mario Coach AI V14</title>
+<link rel="stylesheet" href="style.css?v=14-final"/>
 </head>
 <body>
 <div class="app">
@@ -20,11 +20,11 @@
 </header>
 
 <section class="hero">
-  <span class="badge">🇺🇸 V14 Stable · Gemini · Safe</span>
+  <span class="badge">🇺🇸 V14 Final · Safe · Gemini</span>
   <h2>Hi Mario! Let’s train your English like a real class.</h2>
-  <p>V14 estable sobre la V13.1: conversación IA, clase diaria, examen, shadowing, pronunciación, progreso y botón Instalar App seguro.</p>
+  <p>V14 definitiva: clase diaria, conversación IA, examen B1/B2, shadowing, pronunciación americana, plan semanal, XP y progreso.</p>
   <div class="actions">
-    <button class="primary" onclick="marioSpeak('Hi Mario! Welcome to version fourteen stable. Let’s train your English like a real class.')">🔊 Escuchar a Mario</button>
+    <button class="primary" onclick="marioSpeak('Hi Mario! Welcome to version fourteen. Let’s train your English like a real class.')">🔊 Escuchar a Mario</button>
     <button class="install" onclick="installApp()">📲 Instalar app</button>
     <button onclick="startDailyClass()">🚀 Clase de hoy</button>
     <button onclick="quickPlan()">📅 Plan semanal</button>
@@ -54,7 +54,7 @@
 <section id="daily" class="screen active"><div class="panel">
 <p class="label">Clase diaria B1 → B2</p>
 <h2 id="dailyTitle">Today's focus: clear speaking</h2>
-<p>Paso 1: escucha. Paso 2: responde. Paso 3: recibe corrección. Paso 4: repite la versión natural.</p>
+<p>Escucha, responde, recibe corrección y repite una versión más natural.</p>
 <h3 id="dailyQuestion">What did you do today?</h3>
 <div class="actions">
 <button onclick="marioSpeak(getText('dailyQuestion'))">🔊 Escuchar pregunta</button>
@@ -73,7 +73,7 @@
 <div class="actions">
 <button class="primary" onclick="listenTo('chatInput')">🎙️ Hablar</button>
 <button class="success" onclick="sendChat()">Enviar a Mario IA</button>
-<button onclick="marioSpeak('Hi Mario! Tell me one thing you did today.')">🔊 Escuchar pregunta</button>
+<button onclick="marioSpeak('Hi Mario! Tell me one thing you did today.')">🔊 Escuchar</button>
 <button onclick="newConversationTopic()">🎲 Nuevo tema</button>
 </div>
 </div></section>
@@ -81,7 +81,7 @@
 <section id="exam" class="screen"><div class="panel">
 <p class="label">Mini examen Speaking B1/B2</p>
 <h2 id="examQuestion">Describe a problem you solved recently.</h2>
-<p>Responde 45–90 segundos. Mario evaluará fluidez, gramática, vocabulario y pronunciación sugerida.</p>
+<p>Responde 45–90 segundos. Mario evaluará fluidez, gramática, vocabulario y pronunciación.</p>
 <div class="actions">
 <button onclick="newExam()">Nueva pregunta</button>
 <button onclick="marioSpeak(getText('examQuestion'))">🔊 Escuchar</button>
@@ -133,11 +133,11 @@
 <p class="label">Plan semanal B1 → B2</p>
 <h2>Tu entrenamiento recomendado</h2>
 <div class="week">
-  <div><b>Lunes:</b> speaking personal + corrección</div>
+  <div><b>Lunes:</b> speaking personal + corrección IA</div>
   <div><b>Martes:</b> shadowing americano</div>
   <div><b>Miércoles:</b> conversación IA</div>
   <div><b>Jueves:</b> pronunciación TH / R / V</div>
-  <div><b>Viernes:</b> mini examen</div>
+  <div><b>Viernes:</b> mini examen B1/B2</div>
   <div><b>Sábado:</b> repaso de errores</div>
   <div><b>Domingo:</b> clase libre</div>
 </div>
@@ -154,14 +154,14 @@
 
 <section id="status" class="screen"><div class="panel">
 <p class="label">Estado de conexión</p>
-<h2>V14 Stable conectada a Gemini</h2>
-<p>Versión segura sobre la V13.1. Para instalar: Chrome ⋮ → Agregar a pantalla principal.</p>
+<h2>V14 conectada a Gemini</h2>
+<p>Versión segura sobre la base V13.1. Para instalar: Chrome ⋮ → Agregar a pantalla principal.</p>
 <button class="success" onclick="testApi()">Probar conexión</button>
 <button onclick="clearLocalData()">Limpiar datos locales</button>
 <div id="apiStatus" class="feedback">Toca “Probar conexión”.</div>
 </div></section>
 </main>
 </div>
-<script src="app.js?v=14-stable"></script>
+<script src="app.js?v=14-final"></script>
 </body>
 </html>
