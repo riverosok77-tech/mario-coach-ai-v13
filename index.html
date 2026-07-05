@@ -6,27 +6,28 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-<title>Mario Coach AI V13.1</title>
-<link rel="stylesheet" href="style.css?v=13.1"/>
+<title>Mario Coach AI V14 Stable</title>
+<link rel="stylesheet" href="style.css?v=14-stable"/>
 </head>
 <body>
 <div class="app">
 <header class="header">
   <div class="logo">👨🏻‍🏫</div>
   <div>
-    <h1>Mario Coach AI V13.1</h1>
+    <h1>Mario Coach AI V14</h1>
     <p>American English · B1 → B2 · Gemini Teacher</p>
   </div>
 </header>
 
 <section class="hero">
-  <span class="badge">🇺🇸 V13.1 Safe · No Cache · Gemini</span>
-  <h2>Hi Mario! I’m your personal English teacher.</h2>
-  <p>V13.1 segura: mantiene la versión estable y recupera el botón Instalar app sin agregar archivos que puedan romper GitHub Pages.</p>
+  <span class="badge">🇺🇸 V14 Stable · Gemini · Safe</span>
+  <h2>Hi Mario! Let’s train your English like a real class.</h2>
+  <p>V14 estable sobre la V13.1: conversación IA, clase diaria, examen, shadowing, pronunciación, progreso y botón Instalar App seguro.</p>
   <div class="actions">
-    <button class="primary" onclick="marioSpeak('Hi Mario! Welcome to version thirteen point one. I am your personal English teacher.')">🔊 Escuchar a Mario</button>
+    <button class="primary" onclick="marioSpeak('Hi Mario! Welcome to version fourteen stable. Let’s train your English like a real class.')">🔊 Escuchar a Mario</button>
     <button class="install" onclick="installApp()">📲 Instalar app</button>
     <button onclick="startDailyClass()">🚀 Clase de hoy</button>
+    <button onclick="quickPlan()">📅 Plan semanal</button>
   </div>
 </section>
 
@@ -44,6 +45,7 @@
   <button data-screen="speaking">🎙️ Speaking</button>
   <button data-screen="shadowing">🎧 Shadowing</button>
   <button data-screen="pronunciation">🇺🇸 Pronunciation</button>
+  <button data-screen="planner">📅 Plan</button>
   <button data-screen="progress">📊 Progreso</button>
   <button data-screen="status">✅ Estado</button>
 </nav>
@@ -72,6 +74,7 @@
 <button class="primary" onclick="listenTo('chatInput')">🎙️ Hablar</button>
 <button class="success" onclick="sendChat()">Enviar a Mario IA</button>
 <button onclick="marioSpeak('Hi Mario! Tell me one thing you did today.')">🔊 Escuchar pregunta</button>
+<button onclick="newConversationTopic()">🎲 Nuevo tema</button>
 </div>
 </div></section>
 
@@ -126,6 +129,21 @@
 </div>
 </div></section>
 
+<section id="planner" class="screen"><div class="panel">
+<p class="label">Plan semanal B1 → B2</p>
+<h2>Tu entrenamiento recomendado</h2>
+<div class="week">
+  <div><b>Lunes:</b> speaking personal + corrección</div>
+  <div><b>Martes:</b> shadowing americano</div>
+  <div><b>Miércoles:</b> conversación IA</div>
+  <div><b>Jueves:</b> pronunciación TH / R / V</div>
+  <div><b>Viernes:</b> mini examen</div>
+  <div><b>Sábado:</b> repaso de errores</div>
+  <div><b>Domingo:</b> clase libre</div>
+</div>
+<button class="primary" onclick="startDailyClass()">Empezar ahora</button>
+</div></section>
+
 <section id="progress" class="screen"><div class="panel">
 <p class="label">Tu progreso</p>
 <h2 id="levelText">Nivel estimado: B1 en progreso</h2>
@@ -136,14 +154,14 @@
 
 <section id="status" class="screen"><div class="panel">
 <p class="label">Estado de conexión</p>
-<h2>V13.1 conectada a Gemini</h2>
-<p>Botón Instalar App recuperado de forma segura. Para instalar: Chrome ⋮ → Agregar a pantalla principal.</p>
+<h2>V14 Stable conectada a Gemini</h2>
+<p>Versión segura sobre la V13.1. Para instalar: Chrome ⋮ → Agregar a pantalla principal.</p>
 <button class="success" onclick="testApi()">Probar conexión</button>
 <button onclick="clearLocalData()">Limpiar datos locales</button>
 <div id="apiStatus" class="feedback">Toca “Probar conexión”.</div>
 </div></section>
 </main>
 </div>
-<script src="app.js?v=13.1"></script>
+<script src="app.js?v=14-stable"></script>
 </body>
 </html>
