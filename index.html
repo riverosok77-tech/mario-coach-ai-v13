@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<title>Mario Coach AI V13</title>
+<link rel="stylesheet" href="style.css?v=13.0.0"/>
+</head>
+<body>
+<div class="app">
+<header class="header">
+  <div class="logo">👨🏻‍🏫</div>
+  <div>
+    <h1>Mario Coach AI V13</h1>
+    <p>American English · B1 → B2 · Gemini Teacher</p>
+  </div>
+</header>
+
+<section class="hero">
+  <span class="badge">🇺🇸 V13 Clean · No Cache · Gemini</span>
+  <h2>Hi Mario! I’m your personal English teacher.</h2>
+  <p>V13 limpia: sin archivos mezclados, sin Service Worker viejo, con clase diaria, conversación IA, examen, speaking, shadowing y progreso.</p>
+  <div class="actions">
+    <button class="primary" onclick="marioSpeak('Hi Mario! Welcome to version thirteen. I am your personal English teacher.')">🔊 Escuchar a Mario</button>
+    <button onclick="startDailyClass()">🚀 Clase de hoy</button>
+  </div>
+</section>
+
+<section class="stats">
+  <div><strong id="xp">0</strong><span>XP</span></div>
+  <div><strong id="streak">0</strong><span>racha</span></div>
+  <div><strong id="sessions">0</strong><span>prácticas</span></div>
+  <div><strong id="avg">0</strong><span>promedio</span></div>
+</section>
+
+<nav class="tabs">
+  <button class="active" data-screen="daily">📚 Clase</button>
+  <button data-screen="conversation">🤖 Mario IA</button>
+  <button data-screen="exam">🧪 Examen</button>
+  <button data-screen="speaking">🎙️ Speaking</button>
+  <button data-screen="shadowing">🎧 Shadowing</button>
+  <button data-screen="pronunciation">🇺🇸 Pronunciation</button>
+  <button data-screen="progress">📊 Progreso</button>
+  <button data-screen="status">✅ Estado</button>
+</nav>
+
+<main>
+<section id="daily" class="screen active"><div class="panel">
+<p class="label">Clase diaria B1 → B2</p>
+<h2 id="dailyTitle">Today's focus: clear speaking</h2>
+<p>Paso 1: escucha. Paso 2: responde. Paso 3: recibe corrección. Paso 4: repite la versión natural.</p>
+<h3 id="dailyQuestion">What did you do today?</h3>
+<div class="actions">
+<button onclick="marioSpeak(getText('dailyQuestion'))">🔊 Escuchar pregunta</button>
+<button class="primary" onclick="listenTo('dailyAnswer')">🎙️ Responder</button>
+<button class="success" onclick="correctDaily()">✅ Corregir clase</button>
+<button onclick="newDaily()">Nueva clase</button>
+</div>
+<textarea id="dailyAnswer" placeholder="Ejemplo: Today I went to work and I talked with my coworkers..."></textarea>
+<div id="dailyFeedback" class="feedback">Tu clase corregida aparecerá aquí.</div>
+</div></section>
+
+<section id="conversation" class="screen"><div class="panel">
+<p class="label">Conversación real con Gemini</p>
+<div id="chat" class="chat"><div class="bubble mario"><b>Mario:</b> Hi Mario! Tell me one thing you did today.</div></div>
+<textarea id="chatInput" placeholder="Habla o escribe tu respuesta en inglés..."></textarea>
+<div class="actions">
+<button class="primary" onclick="listenTo('chatInput')">🎙️ Hablar</button>
+<button class="success" onclick="sendChat()">Enviar a Mario IA</button>
+<button onclick="marioSpeak('Hi Mario! Tell me one thing you did today.')">🔊 Escuchar pregunta</button>
+</div>
+</div></section>
+
+<section id="exam" class="screen"><div class="panel">
+<p class="label">Mini examen Speaking B1/B2</p>
+<h2 id="examQuestion">Describe a problem you solved recently.</h2>
+<p>Responde 45–90 segundos. Mario evaluará fluidez, gramática, vocabulario y pronunciación sugerida.</p>
+<div class="actions">
+<button onclick="newExam()">Nueva pregunta</button>
+<button onclick="marioSpeak(getText('examQuestion'))">🔊 Escuchar</button>
+<button class="primary" onclick="listenTo('examAnswer')">🎙️ Responder</button>
+<button class="success" onclick="gradeExam()">🏆 Evaluar examen</button>
+</div>
+<textarea id="examAnswer" placeholder="Escribe o dicta tu respuesta de examen..."></textarea>
+<div id="examFeedback" class="feedback">Tu evaluación aparecerá aquí.</div>
+</div></section>
+
+<section id="speaking" class="screen"><div class="panel">
+<p class="label">Speaking Coach</p>
+<h2 id="question">Tell me about your day.</h2>
+<div class="actions">
+<button onclick="newQuestion()">Nueva pregunta</button>
+<button onclick="marioSpeak(getText('question'))">🔊 Escuchar</button>
+<button class="primary" onclick="listenTo('answer')">🎙️ Responder</button>
+</div>
+<textarea id="answer" placeholder="Habla o escribe tu respuesta en inglés..."></textarea>
+<button class="success" onclick="correctSpeaking()">✅ Corregir con IA</button>
+<div id="feedback" class="feedback">Tu corrección aparecerá aquí.</div>
+</div></section>
+
+<section id="shadowing" class="screen"><div class="panel">
+<p class="label">Shadowing americano</p>
+<h2 id="shadowPhrase">I want to improve my American pronunciation.</h2>
+<div class="actions">
+<button onclick="newShadow()">Nueva frase</button>
+<button onclick="marioSpeak(getText('shadowPhrase'), .72)">🔊 Lento</button>
+<button onclick="marioSpeak(getText('shadowPhrase'), 1)">⚡ Normal</button>
+<button class="primary" onclick="listenTo('shadowAnswer')">🎙️ Repetir</button>
+</div>
+<textarea id="shadowAnswer" placeholder="Repite la frase..."></textarea>
+<button class="success" onclick="checkShadow()">✅ Comparar</button>
+<div id="shadowFeedback" class="feedback">Tu resultado aparecerá aquí.</div>
+</div></section>
+
+<section id="pronunciation" class="screen"><div class="panel">
+<p class="label">Pronunciation Lab · American English</p>
+<h2 id="soundTitle">TH sound: think / three / thank</h2>
+<p id="soundTip">Pon la punta de la lengua suavemente entre los dientes y sopla. No digas “tink”.</p>
+<div class="actions">
+<button onclick="newSound()">Otro sonido</button>
+<button onclick="speakSound()">🔊 Escuchar ejemplo</button>
+</div>
+</div></section>
+
+<section id="progress" class="screen"><div class="panel">
+<p class="label">Tu progreso</p>
+<h2 id="levelText">Nivel estimado: B1 en progreso</h2>
+<p>Practica todos los días para subir tu promedio y tu racha.</p>
+<button onclick="resetProgress()">Reiniciar progreso</button>
+<div id="progressBox" class="feedback"></div>
+</div></section>
+
+<section id="status" class="screen"><div class="panel">
+<p class="label">Estado de conexión</p>
+<h2>V13 conectada a Gemini</h2>
+<p>Esta versión es limpia y debe subirse en un repositorio nuevo para evitar errores de caché.</p>
+<button class="success" onclick="testApi()">Probar conexión</button>
+<button onclick="clearLocalData()">Limpiar datos locales</button>
+<div id="apiStatus" class="feedback">Toca “Probar conexión”.</div>
+</div></section>
+</main>
+</div>
+<script src="app.js?v=13.0.0"></script>
+</body>
+</html>
