@@ -7,8 +7,13 @@
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0"/>
   <meta http-equiv="Pragma" content="no-cache"/>
   <meta http-equiv="Expires" content="0"/>
-  <title>Mario Coach AI Ultimate 2026 Enterprise v18</title>
-  <link rel="stylesheet" href="style.css?v=v18-enterprise-2026"/>
+  <title>Mario Coach AI Ultimate 2026 Enterprise v19</title>
+  <link rel="stylesheet" href="style.css?v=v19-enterprise-pwa"/>
+<link rel="manifest" href="manifest.json?v=v19-enterprise-pwa"/>
+<meta name="theme-color" content="#07142a"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<link rel="apple-touch-icon" href="icon-192.png?v=v19"/>
 </head>
 <body>
 <div class="app">
@@ -19,13 +24,13 @@
     </div>
     <div>
       <h1>Mario Coach AI</h1>
-      <h2>Ultimate 2026 Enterprise v18</h2>
+      <h2>Ultimate 2026 Enterprise v19</h2>
       <p>American English · B1 → B2 → C1 · AI Academy</p>
     </div>
   </header>
 
   <section class="hero">
-    <span class="badge">🇺🇸 Enterprise v18 · Gemini Teacher · Voice Academy</span>
+    <span class="badge">🇺🇸 Enterprise v19 · Gemini Teacher · Voice Academy</span>
     <h3>Hello, Mario! 👋</h3>
     <p class="heroText">I'm Mario, your AI English teacher. I'll correct your English like a real academy teacher.</p>
     <div class="actions">
@@ -180,14 +185,20 @@
     </div></section>
 
     <section id="status" class="screen"><div class="panel">
-      <p class="label">Estado del sistema</p><h2>Enterprise v18</h2>
+      <p class="label">Estado del sistema</p><h2>Enterprise v19</h2>
       <p>Versión sin carpetas. Lista para subir desde celular.</p>
       <button class="success" id="testApi">Probar conexión</button><button id="clearData">Limpiar datos</button>
       <div id="apiStatus" class="feedback">Toca “Probar conexión”.</div>
     </div></section>
   </main>
 </div>
-<script src="config.js?v=v18-enterprise-2026"></script>
-<script src="app.js?v=v18-enterprise-2026"></script>
-</body>
+<script src="config.js?v=v19-enterprise-pwa"></script>
+<script src="app.js?v=v19-enterprise-pwa"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./service-worker.js?v=v19-enterprise-pwa');
+  });
+}
+</script></body>
 </html>
