@@ -1,0 +1,2 @@
+<link rel="manifest" href="manifest.json?v=2026v18">
+<meta name="theme-color" content="#0b1d5a">
