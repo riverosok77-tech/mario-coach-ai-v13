@@ -1,102 +1,193 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0"/>
-<title>Mario Coach AI Ultimate 2026 Enterprise</title>
-<link rel="stylesheet" href="style.css?v=ultimate-2026-enterprise-mobile"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#07142a"/>
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <meta http-equiv="Expires" content="0"/>
+  <title>Mario Coach AI Ultimate 2026 Enterprise v18</title>
+  <link rel="stylesheet" href="style.css?v=v18-enterprise-2026"/>
 </head>
 <body>
 <div class="app">
-<header class="topbar">
-<div id="avatar" class="avatar">👨🏻‍🏫<span></span></div>
-<div><h1>Mario Coach AI Ultimate 2026</h1><p>Enterprise Mobile · American English · B1 → B2 → C1</p></div>
-</header>
+  <header class="topbar">
+    <div id="avatar" class="avatar">
+      <div class="face">👨🏻‍🏫</div>
+      <div class="mouth"></div>
+    </div>
+    <div>
+      <h1>Mario Coach AI</h1>
+      <h2>Ultimate 2026 Enterprise v18</h2>
+      <p>American English · B1 → B2 → C1 · AI Academy</p>
+    </div>
+  </header>
 
-<section class="hero">
-<span class="badge">🇺🇸 Ultimate 2026 Enterprise Mobile · Gemini Teacher</span>
-<h2>Your private American English academy.</h2>
-<p>Conversación continua, corrección visual, voz, pronunciación, shadowing, exámenes, dashboard, errores frecuentes, logros y plan semanal.</p>
-<div class="actions">
-<button class="primary" id="intro">🔊 Escuchar a Mario</button>
-<button id="install">📲 Instalar app</button>
-<button id="startClass">🚀 Clase de hoy</button>
-<button id="continuous">🔁 Conversación continua</button>
+  <section class="hero">
+    <span class="badge">🇺🇸 Enterprise v18 · Gemini Teacher · Voice Academy</span>
+    <h3>Hello, Mario! 👋</h3>
+    <p class="heroText">I'm Mario, your AI English teacher. I'll correct your English like a real academy teacher.</p>
+    <div class="actions">
+      <button class="primary" id="intro">🔊 Escuchar a Mario</button>
+      <button id="install">📲 Instalar app</button>
+      <button id="startClass">🚀 Clase de hoy</button>
+      <button id="continuous">🔁 Conversación continua</button>
+    </div>
+  </section>
+
+  <section class="goal">
+    <div><b>🎯 Meta diaria</b><span id="dailyGoal">Hablar 5 minutos usando pasado simple.</span></div>
+    <div class="goalBar"><i id="goalBar"></i></div>
+    <button id="newGoal">Nuevo objetivo</button>
+  </section>
+
+  <section class="dashboard">
+    <div><strong id="xp">0</strong><span>XP total</span></div>
+    <div><strong id="level">B1</strong><span>Nivel CEFR</span></div>
+    <div><strong id="streak">0</strong><span>Racha</span></div>
+    <div><strong id="avg">0%</strong><span>Promedio</span></div>
+  </section>
+
+  <section class="skills">
+    <div><b>🧠 Grammar</b><div class="meter"><i id="grammarBar"></i></div><span id="grammarScore">0%</span></div>
+    <div><b>🎙️ Pronunciation</b><div class="meter"><i id="pronBar"></i></div><span id="pronScore">0%</span></div>
+    <div><b>🗣️ Fluency</b><div class="meter"><i id="fluencyBar"></i></div><span id="fluencyScore">0%</span></div>
+    <div><b>📚 Vocabulary</b><div class="meter"><i id="vocabBar"></i></div><span id="vocabScore">0%</span></div>
+    <div><b>💪 Confidence</b><div class="meter"><i id="confidenceBar"></i></div><span id="confidenceScore">0%</span></div>
+    <div><b>🎧 Listening</b><div class="meter"><i id="listeningBar"></i></div><span id="listeningScore">0%</span></div>
+  </section>
+
+  <nav class="tabs">
+    <button class="active" data-screen="class">📚 Corrección</button>
+    <button data-screen="conversation">💬 Conversación</button>
+    <button data-screen="pronunciation">🎙 Pronunciación</button>
+    <button data-screen="shadowing">🎧 Shadowing</button>
+    <button data-screen="exam">🧪 Examen</button>
+    <button data-screen="plan">🎯 Plan</button>
+    <button data-screen="mistakes">🧠 Errores</button>
+    <button data-screen="achievements">🏆 Logros</button>
+    <button data-screen="summary">📊 Estadísticas</button>
+    <button data-screen="status">✅ Estado</button>
+  </nav>
+
+  <main>
+    <section id="class" class="screen active">
+      <div class="panel">
+        <p class="label">Corrección de clase</p>
+        <h2 id="classQuestion">What did you do today?</h2>
+        <textarea id="classAnswer" placeholder="Yesterday I go to the park with my friends..."></textarea>
+        <div class="actions">
+          <button id="listenQuestion">🔊 Escuchar pregunta</button>
+          <button class="primary" id="speakClass">🎙 Responder</button>
+          <button class="success" id="correctClass">✨ Corregir clase</button>
+          <button id="newClass">Nueva pregunta</button>
+        </div>
+        <div id="visualCorrection" class="visual"></div>
+        <div id="classFeedback" class="feedback">Tu corrección aparecerá aquí.</div>
+        <div class="actions">
+          <button id="speakFeedback">🔊 Escuchar explicación</button>
+          <button id="repeat">🔁 Repetir frase correcta</button>
+          <button id="next">➡ Siguiente pregunta</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="conversation" class="screen">
+      <div class="panel">
+        <p class="label">Conversación infinita</p>
+        <div id="chat" class="chat"><div class="bubble mario"><b>Mario:</b> Hi Mario! How are you today?</div></div>
+        <textarea id="chatInput" placeholder="Write or speak in English..."></textarea>
+        <div class="actions">
+          <button class="primary" id="speakChat">🎙 Hablar</button>
+          <button class="success" id="sendChat">Enviar</button>
+          <button id="stopContinuous">⏹ Detener continuo</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="pronunciation" class="screen">
+      <div class="panel">
+        <p class="label">Pronunciation Lab</p>
+        <h2 id="soundTitle">beautiful</h2>
+        <p id="soundTip">/ˈbjuː.t̬ə.fəl/ — práctica lenta, normal y nativa.</p>
+        <div id="wordLab" class="word-lab"></div>
+        <div class="actions">
+          <button id="newSound">Otro sonido</button>
+          <button id="soundSlow">🔊 Lento</button>
+          <button id="soundNormal">⚡ Normal</button>
+          <button id="soundNative">🇺🇸 Nativo</button>
+          <button class="primary" id="soundSpeak">🎙 Practicar</button>
+        </div>
+        <textarea id="soundAnswer" placeholder="Repeat the word or sentence..."></textarea>
+        <div id="soundFeedback" class="feedback">Tu pronunciación aparecerá aquí.</div>
+      </div>
+    </section>
+
+    <section id="shadowing" class="screen">
+      <div class="panel">
+        <p class="label">Shadowing Studio</p>
+        <h2 id="shadowPhrase">The more I practice, the better I become.</h2>
+        <div class="actions">
+          <button id="newShadow">Nueva frase</button>
+          <button id="shadowSlow">🔊 Lento</button>
+          <button id="shadowNormal">⚡ Normal</button>
+          <button id="shadowNative">🇺🇸 Nativo</button>
+          <button class="primary" id="speakShadow">🎙 Repetir</button>
+        </div>
+        <textarea id="shadowAnswer" placeholder="Repeat the phrase..."></textarea>
+        <button class="success" id="checkShadow">✅ Comparar</button>
+        <div id="shadowFeedback" class="feedback">Resultado del shadowing.</div>
+      </div>
+    </section>
+
+    <section id="exam" class="screen">
+      <div class="panel">
+        <p class="label">Examen Speaking B1/B2</p>
+        <h2 id="examQuestion">Describe a problem you solved recently.</h2>
+        <div class="actions">
+          <button id="newExam">Nueva pregunta</button>
+          <button id="listenExam">🔊 Escuchar</button>
+          <button class="primary" id="speakExam">🎙 Responder</button>
+          <button class="success" id="gradeExam">🏆 Evaluar</button>
+        </div>
+        <textarea id="examAnswer" placeholder="Answer like an oral exam..."></textarea>
+        <div id="examFeedback" class="feedback">Tu evaluación aparecerá aquí.</div>
+      </div>
+    </section>
+
+    <section id="plan" class="screen"><div class="panel">
+      <p class="label">Plan de estudio adaptativo</p><h2>Tu plan semanal</h2>
+      <div id="planBox" class="feedback"></div>
+      <button id="updatePlan">Actualizar plan</button><button id="speakPlan">🔊 Escuchar plan</button>
+    </div></section>
+
+    <section id="mistakes" class="screen"><div class="panel">
+      <p class="label">Historial inteligente</p><h2>Errores frecuentes</h2>
+      <div id="mistakeList" class="feedback">Todavía no hay errores guardados.</div>
+      <button id="clearMistakes">Limpiar errores</button>
+    </div></section>
+
+    <section id="achievements" class="screen"><div class="panel">
+      <p class="label">Logros</p><h2>Academy achievements</h2>
+      <div id="achievementBox" class="achievement-grid"></div>
+    </div></section>
+
+    <section id="summary" class="screen"><div class="panel">
+      <p class="label">Estadísticas</p><h2>Tu progreso de hoy</h2>
+      <div id="summaryBox" class="feedback">Todavía no hay datos.</div>
+      <button id="updateSummary">Actualizar resumen</button><button id="speakSummary">🔊 Escuchar resumen</button>
+    </div></section>
+
+    <section id="status" class="screen"><div class="panel">
+      <p class="label">Estado del sistema</p><h2>Enterprise v18</h2>
+      <p>Versión sin carpetas. Lista para subir desde celular.</p>
+      <button class="success" id="testApi">Probar conexión</button><button id="clearData">Limpiar datos</button>
+      <div id="apiStatus" class="feedback">Toca “Probar conexión”.</div>
+    </div></section>
+  </main>
 </div>
-</section>
-
-<section class="goal"><b>🎯 Objetivo de hoy:</b> <span id="dailyGoal">Hablar 5 minutos usando pasado simple.</span><button id="newGoal">Nuevo objetivo</button></section>
-
-<section class="dashboard">
-<div><strong id="xp">0</strong><span>XP</span></div>
-<div><strong id="level">B1</strong><span>Nivel</span></div>
-<div><strong id="streak">0</strong><span>Racha</span></div>
-<div><strong id="avg">0%</strong><span>Promedio</span></div>
-</section>
-
-<section class="skills">
-<div><b>🧠 Grammar</b><div class="meter"><i id="grammarBar"></i></div><span id="grammarScore">0%</span></div>
-<div><b>🎙 Pronunciation</b><div class="meter"><i id="pronBar"></i></div><span id="pronScore">0%</span></div>
-<div><b>🗣 Fluency</b><div class="meter"><i id="fluencyBar"></i></div><span id="fluencyScore">0%</span></div>
-<div><b>📚 Vocabulary</b><div class="meter"><i id="vocabBar"></i></div><span id="vocabScore">0%</span></div>
-<div><b>💪 Confidence</b><div class="meter"><i id="confidenceBar"></i></div><span id="confidenceScore">0%</span></div>
-<div><b>🎧 Listening</b><div class="meter"><i id="listeningBar"></i></div><span id="listeningScore">0%</span></div>
-</section>
-
-<nav class="tabs">
-<button class="active" data-screen="class">📚 Academia</button>
-<button data-screen="conversation">🤖 Conversación</button>
-<button data-screen="exam">🧪 Examen</button>
-<button data-screen="shadowing">🎧 Shadowing</button>
-<button data-screen="pronunciation">🇺🇸 Pronunciation</button>
-<button data-screen="mistakes">🧠 Errores</button>
-<button data-screen="plan">🎯 Plan</button>
-<button data-screen="achievements">🏅 Logros</button>
-<button data-screen="summary">📊 Dashboard</button>
-<button data-screen="status">✅ Estado</button>
-</nav>
-
-<main>
-<section id="class" class="screen active"><div class="panel">
-<p class="label">Academy Class</p><h2>Talk about your day naturally</h2><h3 id="classQuestion">What did you do today?</h3>
-<div class="actions"><button id="listenQuestion">🔊 Escuchar pregunta</button><button class="primary" id="speakClass">🎙 Responder</button><button class="success" id="correctClass">✅ Corregir clase</button><button id="newClass">Nueva clase</button></div>
-<textarea id="classAnswer" placeholder="Today I went to work and then I visited my family..."></textarea>
-<div id="visualCorrection" class="visual"></div><div id="classFeedback" class="feedback">Tu corrección aparecerá aquí.</div>
-<div class="actions"><button id="speakFeedback">🗣 Escuchar explicación</button><button id="repeat">🔁 Repetir frase</button><button id="next">➡ Siguiente pregunta</button></div>
-</div></section>
-
-<section id="conversation" class="screen"><div class="panel">
-<p class="label">Infinite Conversation</p><div id="chat" class="chat"><div class="bubble mario"><b>Mario:</b> Hi Mario! Tell me about your day.</div></div>
-<textarea id="chatInput" placeholder="Speak or write in English..."></textarea>
-<div class="actions"><button class="primary" id="speakChat">🎙 Hablar</button><button class="success" id="sendChat">Enviar</button><button id="stopContinuous">⏹ Detener</button></div>
-</div></section>
-
-<section id="exam" class="screen"><div class="panel">
-<p class="label">Cambridge-style Speaking Exam</p><h2 id="examQuestion">Describe a problem you solved recently.</h2>
-<div class="actions"><button id="newExam">Nueva pregunta</button><button id="listenExam">🔊 Escuchar</button><button class="primary" id="speakExam">🎙 Responder</button><button class="success" id="gradeExam">🏆 Evaluar</button></div>
-<textarea id="examAnswer" placeholder="Answer like an oral exam..."></textarea><div id="examFeedback" class="feedback">Tu evaluación aparecerá aquí.</div>
-</div></section>
-
-<section id="shadowing" class="screen"><div class="panel">
-<p class="label">Shadowing Studio</p><h2 id="shadowPhrase">I want to improve my American pronunciation.</h2>
-<div class="actions"><button id="newShadow">Nueva frase</button><button id="shadowSlow">🔊 Lento</button><button id="shadowNormal">⚡ Normal</button><button id="shadowNative">🇺🇸 Nativo</button><button class="primary" id="speakShadow">🎙 Repetir</button></div>
-<textarea id="shadowAnswer"></textarea><button class="success" id="checkShadow">✅ Comparar</button><div id="shadowFeedback" class="feedback">Resultado del shadowing.</div>
-</div></section>
-
-<section id="pronunciation" class="screen"><div class="panel">
-<p class="label">Pronunciation Lab</p><h2 id="soundTitle">TH sound: think / three / thank</h2><p id="soundTip">Pon la punta de la lengua suavemente entre los dientes y sopla.</p><div id="wordLab" class="word-lab"></div>
-<div class="actions"><button id="newSound">Otro sonido</button><button id="soundExample">🔊 Ejemplo</button><button id="soundExplain">🗣 Explicar</button></div>
-</div></section>
-
-<section id="mistakes" class="screen"><div class="panel"><p class="label">Memory System</p><h2>Errores frecuentes</h2><div id="mistakeList" class="feedback">Todavía no hay errores guardados.</div><button id="clearMistakes">Limpiar errores</button></div></section>
-<section id="plan" class="screen"><div class="panel"><p class="label">Adaptive Weekly Plan</p><h2>Tu plan</h2><div id="planBox" class="feedback"></div><button id="updatePlan">Actualizar plan</button><button id="speakPlan">🗣 Escuchar plan</button></div></section>
-<section id="achievements" class="screen"><div class="panel"><p class="label">Achievements</p><h2>Academy achievements</h2><div id="achievementBox" class="achievement-grid"></div></div></section>
-<section id="summary" class="screen"><div class="panel"><p class="label">Progress Dashboard</p><h2>Tu progreso de hoy</h2><div id="summaryBox" class="feedback">Todavía no hay datos.</div><button id="updateSummary">Actualizar resumen</button><button id="speakSummary">🗣 Escuchar resumen</button></div></section>
-<section id="status" class="screen"><div class="panel"><p class="label">System Status</p><h2>Ultimate 2026 Enterprise Mobile</h2><p>Versión sin carpetas, lista para subir desde celular.</p><button class="success" id="testApi">Probar conexión</button><button id="clearData">Limpiar datos</button><div id="apiStatus" class="feedback">Toca “Probar conexión”.</div></div></section>
-</main>
-</div>
-<script src="config.js?v=ultimate-2026-enterprise-mobile"></script>
-<script src="app.js?v=ultimate-2026-enterprise-mobile"></script>
+<script src="config.js?v=v18-enterprise-2026"></script>
+<script src="app.js?v=v18-enterprise-2026"></script>
 </body>
 </html>
