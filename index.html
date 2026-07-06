@@ -6,28 +6,28 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-<title>Mario Coach AI V15 Pro Academy</title>
-<link rel="stylesheet" href="style.css?v=15-pro-academy"/>
+<title>Mario Coach AI V16 Final</title>
+<link rel="stylesheet" href="style.css?v=16-final"/>
 </head>
 <body>
 <div class="app">
 <header class="header">
-  <div id="avatar" class="logo"><span id="face">👨🏻‍🏫</span></div>
+  <div id="avatar" class="logo">👨🏻‍🏫</div>
   <div>
-    <h1>Mario Coach AI V15</h1>
-    <p>American English · B1 → B2 · Pro Academy</p>
+    <h1>Mario Coach AI V16</h1>
+    <p>American English · B1 → B2 · Final Academy</p>
   </div>
 </header>
 
 <section class="hero">
-  <span class="badge">🇺🇸 V15 Pro Academy · Voice Teacher · Gemini</span>
-  <h2>Hi Mario! I’m your English academy teacher.</h2>
-  <p>Conversación continua, corrección hablada, evaluación B1/B2, shadowing, pronunciación americana, XP, niveles y plan personalizado.</p>
+  <span class="badge">🇺🇸 V16 Final · Academy Teacher · Gemini</span>
+  <h2>Hi Mario! I’ll correct, explain, score, and train you like a real academy.</h2>
+  <p>Corrección completa, explicación hablada, errores palabra por palabra, puntaje, nivel CEFR, shadowing y plan personalizado.</p>
   <div class="actions">
-    <button class="primary" onclick="marioIntro()">🔊 Escuchar a Mario</button>
+    <button class="primary" onclick="intro()">🔊 Escuchar a Mario</button>
     <button class="install" onclick="installApp()">📲 Instalar app</button>
-    <button onclick="startDailyClass()">🚀 Clase de hoy</button>
-    <button onclick="startContinuousMode()">🔁 Conversación continua</button>
+    <button onclick="startDaily()">🚀 Clase de hoy</button>
+    <button onclick="startContinuous()">🔁 Conversación continua</button>
   </div>
 </section>
 
@@ -38,88 +38,81 @@
   <div><strong id="avg">0</strong><span>promedio</span></div>
 </section>
 
-<section class="academy">
-  <div>
-    <b>🎙️ Pronunciación</b>
-    <div class="meter"><div id="pronBar" class="meter-fill" style="width:0%"></div></div>
-    <span id="pronScore">0%</span>
-  </div>
-  <div>
-    <b>🧠 Gramática</b>
-    <div class="meter"><div id="grammarBar" class="meter-fill grammar" style="width:0%"></div></div>
-    <span id="grammarScore">0%</span>
-  </div>
+<section class="scoreboard">
+  <div><b>🧠 Gramática</b><div class="meter"><div id="grammarBar" class="fill gold"></div></div><span id="grammarScore">0%</span></div>
+  <div><b>🎙️ Pronunciación</b><div class="meter"><div id="pronBar" class="fill cyan"></div></div><span id="pronScore">0%</span></div>
+  <div><b>🗣️ Fluidez</b><div class="meter"><div id="fluencyBar" class="fill green"></div></div><span id="fluencyScore">0%</span></div>
+  <div><b>📚 Vocabulario</b><div class="meter"><div id="vocabBar" class="fill blue"></div></div><span id="vocabScore">0%</span></div>
 </section>
 
 <nav class="tabs">
-  <button class="active" data-screen="daily">📚 Clase</button>
+  <button class="active" data-screen="class">📚 Clase</button>
   <button data-screen="conversation">🤖 Conversación</button>
   <button data-screen="exam">🧪 Examen</button>
   <button data-screen="shadowing">🎧 Shadowing</button>
   <button data-screen="pronunciation">🇺🇸 Pronunciation</button>
   <button data-screen="plan">🎯 Plan</button>
-  <button data-screen="session">🏆 Resumen</button>
+  <button data-screen="summary">🏆 Resumen</button>
   <button data-screen="status">✅ Estado</button>
 </nav>
 
 <main>
-<section id="daily" class="screen active"><div class="panel">
-<p class="label">Clase diaria profesional</p>
-<h2 id="dailyTitle">Today's class: Past actions</h2>
-<h3 id="dailyQuestion">What did you do today?</h3>
-<p>Responde en inglés. Mario corregirá, hablará y te hará repetir.</p>
+<section id="class" class="screen active"><div class="panel">
+<p class="label">Clase diaria V16</p>
+<h2 id="classTitle">Today's class: Talking about your day</h2>
+<h3 id="classQuestion">What did you do today?</h3>
 <div class="actions">
-<button onclick="marioSpeak(getText('dailyQuestion'),'en-US')">🔊 Pregunta</button>
-<button class="primary" onclick="listenTo('dailyAnswer')">🎙️ Responder</button>
-<button class="success" onclick="correctDaily()">✅ Corregir</button>
-<button onclick="newDaily()">Nueva clase</button>
+<button onclick="speak(getText('classQuestion'),'en-US')">🔊 Escuchar pregunta</button>
+<button class="primary" onclick="listenTo('classAnswer')">🎙️ Responder</button>
+<button class="success" onclick="correctClass()">✅ Corregir clase</button>
+<button onclick="newClass()">Nueva clase</button>
 </div>
-<textarea id="dailyAnswer" placeholder="Today I went to work..."></textarea>
-<div id="dailyFeedback" class="feedback">Tu clase corregida aparecerá aquí.</div>
+<textarea id="classAnswer" placeholder="Ejemplo: Today I went to work and then I visited my family..."></textarea>
+<div id="classFeedback" class="feedback">Tu corrección completa aparecerá aquí.</div>
 <div class="actions">
-<button onclick="speakLastFeedback()">🗣️ Escuchar explicación</button>
-<button onclick="repeatCorrectSentence()">🔁 Repetir frase</button>
-<button onclick="nextAutoQuestion()">➡️ Siguiente pregunta</button>
+<button onclick="speakFeedback()">🗣️ Escuchar explicación</button>
+<button onclick="repeatSentence()">🔁 Repetir frase</button>
+<button onclick="nextQuestion()">➡️ Siguiente pregunta</button>
 </div>
 </div></section>
 
 <section id="conversation" class="screen"><div class="panel">
 <p class="label">Conversación continua</p>
 <div id="chat" class="chat"><div class="bubble mario"><b>Mario:</b> Hi Mario! Tell me about your day.</div></div>
-<textarea id="chatInput" placeholder="Escribe o habla en inglés..."></textarea>
+<textarea id="chatInput" placeholder="Habla o escribe tu respuesta en inglés..."></textarea>
 <div class="actions">
 <button class="primary" onclick="listenTo('chatInput')">🎙️ Hablar</button>
 <button class="success" onclick="sendChat()">Enviar</button>
-<button onclick="startContinuousMode()">🔁 Modo continuo</button>
-<button onclick="stopContinuousMode()">⏹️ Detener</button>
+<button onclick="startContinuous()">🔁 Continuo</button>
+<button onclick="stopContinuous()">⏹️ Detener</button>
 </div>
 </div></section>
 
 <section id="exam" class="screen"><div class="panel">
-<p class="label">Examen Speaking B1/B2</p>
+<p class="label">Examen B1/B2</p>
 <h2 id="examQuestion">Describe a problem you solved recently.</h2>
 <div class="actions">
 <button onclick="newExam()">Nueva pregunta</button>
-<button onclick="marioSpeak(getText('examQuestion'),'en-US')">🔊 Escuchar</button>
+<button onclick="speak(getText('examQuestion'),'en-US')">🔊 Escuchar</button>
 <button class="primary" onclick="listenTo('examAnswer')">🎙️ Responder</button>
 <button class="success" onclick="gradeExam()">🏆 Evaluar</button>
 </div>
-<textarea id="examAnswer" placeholder="Dicta o escribe tu respuesta..."></textarea>
+<textarea id="examAnswer" placeholder="Responde como examen oral..."></textarea>
 <div id="examFeedback" class="feedback">Tu evaluación aparecerá aquí.</div>
 </div></section>
 
 <section id="shadowing" class="screen"><div class="panel">
-<p class="label">Shadowing profesional</p>
+<p class="label">Shadowing automático</p>
 <h2 id="shadowPhrase">I want to improve my American pronunciation.</h2>
 <div class="actions">
 <button onclick="newShadow()">Nueva frase</button>
-<button onclick="marioSpeak(getText('shadowPhrase'),'en-US',.72)">🔊 Lento</button>
-<button onclick="marioSpeak(getText('shadowPhrase'),'en-US',1)">⚡ Normal</button>
+<button onclick="speak(getText('shadowPhrase'),'en-US',.72)">🔊 Lento</button>
+<button onclick="speak(getText('shadowPhrase'),'en-US',1)">⚡ Normal</button>
 <button class="primary" onclick="listenTo('shadowAnswer')">🎙️ Repetir</button>
 </div>
 <textarea id="shadowAnswer" placeholder="Repite la frase..."></textarea>
 <button class="success" onclick="checkShadow()">✅ Comparar</button>
-<div id="shadowFeedback" class="feedback">Resultado de shadowing.</div>
+<div id="shadowFeedback" class="feedback">Resultado del shadowing.</div>
 </div></section>
 
 <section id="pronunciation" class="screen"><div class="panel">
@@ -129,38 +122,40 @@
 <div class="actions">
 <button onclick="newSound()">Otro sonido</button>
 <button onclick="speakSound()">🔊 Ejemplo</button>
-<button onclick="marioSpeak(getText('soundTip'),'es-ES')">🗣️ Explicar</button>
+<button onclick="speak(getText('soundTip'),'es-ES')">🗣️ Explicar</button>
 </div>
 </div></section>
 
 <section id="plan" class="screen"><div class="panel">
 <p class="label">Plan personalizado</p>
-<h2>Tu plan de estudio</h2>
+<h2>Tu plan según tus errores</h2>
 <div id="planBox" class="feedback"></div>
+<div class="actions">
 <button class="primary" onclick="updatePlan()">Actualizar plan</button>
 <button onclick="speakPlan()">🗣️ Escuchar plan</button>
+</div>
 </div></section>
 
-<section id="session" class="screen"><div class="panel">
-<p class="label">Resumen de academia</p>
-<h2>Tu sesión de hoy</h2>
-<div id="sessionSummary" class="feedback">Todavía no hay datos.</div>
+<section id="summary" class="screen"><div class="panel">
+<p class="label">Resumen final de sesión</p>
+<h2>Tu progreso de hoy</h2>
+<div id="summaryBox" class="feedback">Todavía no hay datos.</div>
 <div class="actions">
-<button onclick="showSessionSummary()">Actualizar</button>
-<button onclick="speakSessionSummary()">🗣️ Escuchar</button>
+<button onclick="showSummary()">Actualizar resumen</button>
+<button onclick="speakSummary()">🗣️ Escuchar resumen</button>
 </div>
 </div></section>
 
 <section id="status" class="screen"><div class="panel">
 <p class="label">Estado</p>
-<h2>Mario Coach AI V15 Pro Academy</h2>
-<p>Frontend estable conectado al backend Gemini por Apps Script.</p>
+<h2>Mario Coach AI V16 Final</h2>
+<p>Frontend estable conectado a Gemini por Apps Script.</p>
 <button class="success" onclick="testApi()">Probar conexión</button>
-<button onclick="clearLocalData()">Limpiar datos</button>
+<button onclick="clearData()">Limpiar datos</button>
 <div id="apiStatus" class="feedback">Toca “Probar conexión”.</div>
 </div></section>
 </main>
 </div>
-<script src="app.js?v=15-pro-academy"></script>
+<script src="app.js?v=16-final"></script>
 </body>
 </html>
