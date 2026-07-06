@@ -1,7 +1,6 @@
-MARIO COACH AI ULTIMATE 2026 PRO MOBILE EDITION
+MARIO COACH AI ULTIMATE 2026 ENTERPRISE MOBILE
 
-Esta versión NO usa carpetas modules.
-Está preparada para subir desde celular.
+Versión sin carpetas para subir desde celular.
 
 SUBIR ESTOS ARCHIVOS:
 - index.html
@@ -9,13 +8,5 @@ SUBIR ESTOS ARCHIVOS:
 - app.js
 - config.js
 
-NO TOCAR SI YA FUNCIONAN:
-- manifest.json
-- sw.js
-
 LINK:
-https://riverosok77-tech.github.io/mario-coach-ai-v13/?v=ultimate-2026-pro-mobile
-
-Si ves versión vieja:
-- abre en incógnito
-- o borra caché del sitio
+https://riverosok77-tech.github.io/mario-coach-ai-v13/?v=ultimate-2026-enterprise-mobile
