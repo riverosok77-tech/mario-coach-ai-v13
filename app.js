@@ -1,62 +1,307 @@
-const API_URL="https://script.google.com/macros/s/AKfycbwCN39HHbwgo92ItpTXazCzkblFZHn7m3zhnLkGh7qQUqFoescOPRY58xu_uTkVwUF8HQ/exec";
-let lastFeedback="",lastSentence="",continuous=false;
-let session={started:Date.now(),answers:0,words:0,errors:0};
-const qs=["What did you do today?","What did you do yesterday?","What are your plans for tomorrow?","Tell me about your work routine.","Describe your family.","What is difficult for you in English?","Tell me about your city?","What did you eat today?"];
-const exams=["Describe a problem you solved recently.","Talk about a person who inspires you.","Describe your ideal vacation.","Explain why English is important for you.","Tell me about a difficult day at work."];
-const shadows=["I want to improve my American pronunciation.","Could you say that again, please?","Yesterday I worked all day and then I went home.","I feel more confident when I practice every day.","I would like to speak more naturally."];
-const sounds=[{t:"TH sound: think / three / thank",tip:"Pon la punta de la lengua suavemente entre los dientes y sopla. No digas tink.",ex:"think, three, thank you",words:["think","three","thank"]},{t:"V sound: very / voice / vacation",tip:"Toca el labio inferior con los dientes superiores y vibra. No lo pronuncies como B.",ex:"very good voice",words:["very","voice","vacation"]},{t:"American R: car / work / teacher",tip:"Lleva la lengua hacia atrás sin tocar el paladar.",ex:"car, work, teacher",words:["car","work","teacher"]},{t:"Past ED: worked / played / wanted",tip:"Worked suena T, played suena D, wanted suena ID.",ex:"worked, played, wanted",words:["worked","played","wanted"]}];
-document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.screen).classList.add("active");if(b.dataset.screen==="plan")updatePlan();if(b.dataset.screen==="summary")showSummary();if(b.dataset.screen==="mistakes")renderMistakes();}));
-function getText(id){return document.getElementById(id).textContent} function rnd(a){return a[Math.floor(Math.random()*a.length)]}
-function installApp(){alert("Para instalar en Android: Chrome ⋮ → Agregar a pantalla principal.");}
-function intro(){speak("Hi Mario! Welcome to version seventeen pro academy. I will correct your English and help you practice like a real class.","en-US")}
-function startClass(){document.querySelector('[data-screen="class"]').click();newClass();speak(getText("classQuestion"),"en-US")}
-function newClass(){document.getElementById("classQuestion").textContent=rnd(qs)}
-function newExam(){document.getElementById("examQuestion").textContent=rnd(exams)}
-function newShadow(){document.getElementById("shadowPhrase").textContent=rnd(shadows)}
-function newSound(){let s=rnd(sounds);document.getElementById("soundTitle").textContent=s.t;document.getElementById("soundTip").textContent=s.tip;renderWordLab(s.words)}
-function speakSound(){let s=sounds.find(x=>x.t===getText("soundTitle"))||sounds[0];speak(s.ex,"en-US",.75);renderWordLab(s.words)}
-function renderWordLab(words){document.getElementById("wordLab").innerHTML=words.map(w=>`<span class="word"><b>${w}</b><small>${ipa(w)}</small><button onclick="speak('${w}','en-US',.75)">🔊</button></span>`).join("")}
-function ipa(w){return {"think":"/θɪŋk/","three":"/θriː/","thank":"/θæŋk/","very":"/ˈveri/","voice":"/vɔɪs/","vacation":"/veɪˈkeɪʃən/","car":"/kɑr/","work":"/wɝk/","teacher":"/ˈtiːtʃɚ/","worked":"/wɝkt/","played":"/pleɪd/","wanted":"/ˈwɑntɪd/"}[w]||""}
-function speak(text,lang="es-ES",rate=.92,after=null){if(!("speechSynthesis"in window)){alert("Este navegador no permite voz.");return}speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(clean(text));u.lang=lang;u.rate=rate;u.pitch=1;let vs=speechSynthesis.getVoices();let v=vs.find(x=>x.lang===lang)||vs.find(x=>x.lang&&x.lang.startsWith(lang.split("-")[0]));if(v)u.voice=v;let av=document.getElementById("avatar");u.onstart=()=>av.classList.add("speaking");u.onend=()=>{av.classList.remove("speaking");if(after)after()};u.onerror=()=>av.classList.remove("speaking");speechSynthesis.speak(u)}
-function clean(t){return stripMarkdown(String(t)).replace(/[✅❌🎙️🧠🇺🇸👨🏻‍🏫⭐📊🏆🎯📚🗣️➡️]/g," ").replace(/\s+/g," ").trim()}
-function listenTo(id){let SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert("Tu navegador no permite reconocimiento de voz.");return}let r=new SR();r.lang="en-US";r.interimResults=false;r.continuous=false;r.onresult=e=>{document.getElementById(id).value=Array.from(e.results).map(x=>x[0].transcript).join(" ");scoreLocal(document.getElementById(id).value)};r.onerror=e=>alert("Error de micrófono: "+e.error);r.start()}
-function scoreLocal(text){let w=String(text).trim().split(/\s+/).filter(Boolean).length;let g=Math.min(98,Math.max(55,68+Math.floor(Math.random()*24)));let p=Math.min(98,Math.max(45,58+w*3+Math.floor(Math.random()*8)));let f=Math.min(98,Math.max(50,60+w*2+Math.floor(Math.random()*12)));let v=Math.min(98,Math.max(55,65+Math.floor(Math.random()*25)));let c=Math.min(98,Math.max(50,60+w*2+Math.floor(Math.random()*15)));setScores(g,p,f,v,c);return Math.round((g+p+f+v+c)/5)}
-function setScores(g,p,f,v,c){setBar("grammar",g);setBar("pron",p);setBar("fluency",f);setBar("vocab",v);setBar("confidence",c)}
-function setBar(name,val){document.getElementById(name+"Bar").style.width=val+"%";document.getElementById(name+"Score").textContent=val+"%"}
-async function ai(text,mode){let res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({text,mode})});let data=await res.json();if(data.error)throw new Error(data.error);return data.reply}
-function promptMode(base){return base+" V17 PRO ACADEMY. Do not use Markdown. No asterisks. Include: Mario says, Natural American English, Error by error with original -> correction, Simple grammar rule, Pronunciation tip, CEFR estimate, score, next question."}
-function handle(id,reply,text,score,xp){reply=stripMarkdown(reply);lastFeedback=reply;lastSentence=extractSentence(reply);document.getElementById(id).innerHTML=formatReply(reply);document.getElementById("visualCorrection").innerHTML=visualCorrection(text,lastSentence);saveMistakes(reply);session.answers++;session.words+=String(text).split(/\s+/).filter(Boolean).length;session.errors+=countErr(reply);addProgress(session.words,score,xp);speak(shortVoice(reply),"es-ES",.92,()=>{if(continuous)nextQuestion()})}
-function formatReply(t){let s=esc(stripMarkdown(t));s=s.replace(/Mario says:/gi,"<h4>👨🏻‍🏫 Mario says:</h4>").replace(/Natural American English:/gi,"<h4>✅ Natural American English:</h4>").replace(/Error by error:/gi,"<h4>🧠 Error by error:</h4>").replace(/Explicación simple:/gi,"<h4>🧠 Explicación simple:</h4>").replace(/Simple grammar rule:/gi,"<h4>📚 Simple grammar rule:</h4>").replace(/Pronunciation tip:/gi,"<h4>🇺🇸 Pronunciation tip:</h4>").replace(/Next question:/gi,"<h4>🎙️ Next question:</h4>");return `<div class="clean">${s}</div>`}
-function visualCorrection(original,correct){if(!correct)return "";return `<h4>Corrección visual</h4><span class="wrong">❌ ${esc(original)}</span><span class="arrow">→</span><span class="right">✅ ${esc(correct)}</span>`}
-function shortVoice(t){let natural=extractSentence(t);let q=extractQuestion(t);let exp=(t.match(/Simple grammar rule:\s*([\s\S]{0,260})/i)||t.match(/Explicación simple:\s*([\s\S]{0,260})/i)||["",""])[1];return `Muy bien. La forma natural es: ${natural}. ${exp}. Repite conmigo: ${natural}. ${q? "Siguiente pregunta: "+q:""}`;}
-async function correctClass(){let text=document.getElementById("classAnswer").value.trim();if(!text){document.getElementById("classFeedback").textContent="Primero responde.";return}document.getElementById("classFeedback").textContent="Mario está corrigiendo...";try{let score=scoreLocal(text);let r=await ai(text,promptMode("Daily class correction"));handle("classFeedback",r,text,score,35)}catch(e){document.getElementById("classFeedback").textContent=e.message}}
-async function gradeExam(){let text=document.getElementById("examAnswer").value.trim();if(!text){document.getElementById("examFeedback").textContent="Primero responde.";return}document.getElementById("examFeedback").textContent="Mario está evaluando...";try{let score=scoreLocal(text);let r=stripMarkdown(await ai(text,promptMode("B1/B2 speaking exam")));lastFeedback=r;document.getElementById("examFeedback").innerHTML=formatReply(r);speak(shortVoice(r),"es-ES");addProgress(text.split(/\s+/).length,score,50)}catch(e){document.getElementById("examFeedback").textContent=e.message}}
-async function sendChat(){let inp=document.getElementById("chatInput");let text=inp.value.trim();if(!text)return;addBubble("user","<b>You:</b> "+esc(text));inp.value="";addBubble("mario","<b>Mario:</b> Thinking...");try{let score=scoreLocal(text);let r=stripMarkdown(await ai(text,promptMode("Continuous conversation")));document.querySelector("#chat .bubble:last-child").innerHTML="<b>Mario:</b> "+formatReply(r);lastFeedback=r;lastSentence=extractSentence(r);saveMistakes(r);session.answers++;session.words+=text.split(/\s+/).length;addProgress(text.split(/\s+/).length,score,25);speak(shortVoice(r),"es-ES",.92,()=>{if(continuous)nextQuestion()})}catch(e){document.querySelector("#chat .bubble:last-child").innerHTML="<b>Mario:</b> "+esc(e.message)}}
-function startContinuous(){continuous=true;document.querySelector('[data-screen="conversation"]').click();let q=rnd(qs);addBubble("mario","<b>Mario:</b> "+esc(q));speak(q,"en-US")}
-function stopContinuous(){continuous=false;alert("Conversación continua detenida.")}
-function nextQuestion(){let q=extractQuestion(lastFeedback)||rnd(qs);addBubble("mario","<b>Mario:</b> "+esc(q));speak(q,"en-US")}
-function speakFeedback(){if(!lastFeedback){alert("Primero hacé una corrección.");return}speak(shortVoice(lastFeedback),"es-ES")}
-function repeatSentence(){if(!lastSentence){alert("No encontré frase correcta.");return}speak(lastSentence,"en-US",.78)}
-function checkShadow(){let t=getText("shadowPhrase").toLowerCase().replace(/[^a-z\s]/g,"").trim();let a=document.getElementById("shadowAnswer").value.toLowerCase().replace(/[^a-z\s]/g,"").trim();if(!a){document.getElementById("shadowFeedback").textContent="Primero repite la frase.";return}let tw=t.split(/\s+/),aw=a.split(/\s+/);let hits=tw.filter(w=>aw.includes(w)).length;let score=Math.round(hits/tw.length*100);setScores(90,score,score,85,score);let msg=`Coincidencia: ${score}%\nFrase correcta: ${getText("shadowPhrase")}\nRepite copiando ritmo, pausa y entonación.`;document.getElementById("shadowFeedback").textContent=msg;speak(msg,"es-ES");addProgress(aw.length,score,15)}
-async function testApi(){let st=document.getElementById("apiStatus");st.textContent="Probando conexión...";try{let r=await ai("Hello Mario, this is a test.","V17 test");st.textContent="✅ Conexión correcta:\n"+stripMarkdown(r);speak("Conexión correcta. Mario Coach AI V17 está funcionando.","es-ES")}catch(e){st.textContent="❌ "+e.message}}
-function updatePlan(){let p=loadProgress();let avg=p.scores.length?Math.round(p.scores.reduce((a,b)=>a+b,0)/p.scores.length):0;let mistakes=getMistakes().slice(-5).join(", ")||"past simple, connectors, pronunciation";let plan=`🎯 Plan personalizado V17\n\nNivel actual: ${levelFrom(avg)}\nPromedio: ${avg}%\nErrores recientes: ${mistakes}\n\nEsta semana:\n1. Practica 5 respuestas largas.\n2. Repite cada frase correcta 3 veces.\n3. Haz shadowing 5 minutos.\n4. Usa conectores: then, after that, because.\n5. Repasa tus errores recientes.`;document.getElementById("planBox").textContent=plan;return plan}
-function speakPlan(){speak(updatePlan(),"es-ES")}
-function showSummary(){let mins=Math.max(1,Math.round((Date.now()-session.started)/60000));let msg=`🏆 Resumen V17\n\nTiempo: ${mins} minuto(s)\nRespuestas: ${session.answers}\nPalabras practicadas: ${session.words}\nErrores detectados: ${session.errors}\nNivel sugerido: ${document.getElementById("level").textContent}\n\nPróxima meta: respuestas más largas, mejor uso del pasado y pronunciación más clara.`;document.getElementById("summaryBox").textContent=msg;return msg}
-function speakSummary(){speak(showSummary(),"es-ES")}
-function saveMistakes(t){let arr=getMistakes();let found=[];if(/has|have/i.test(t))found.push("have / has");if(/past|went|watched|worked/i.test(t))found.push("past simple");if(/continuous|watching|having/i.test(t))found.push("present/past continuous");if(/pronunciation|sound/i.test(t))found.push("pronunciation");arr=[...arr,...found].slice(-20);localStorage.setItem("marioV17Mistakes",JSON.stringify(arr));renderMistakes()}
-function getMistakes(){return JSON.parse(localStorage.getItem("marioV17Mistakes")||"[]")}
-function renderMistakes(){let arr=getMistakes();document.getElementById("mistakeList").innerHTML=arr.length?arr.map(x=>"✓ "+esc(x)).join("<br>"):"Todavía no hay errores guardados."}
-function clearMistakes(){localStorage.removeItem("marioV17Mistakes");renderMistakes()}
-function extractSentence(t){let m=String(t).match(/Natural American English:\s*["“]?([^"\n”]+)["”]?/i);if(m)return m[1].trim();let q=String(t).match(/["“]([^"”]{10,250})["”]/);return q?q[1].trim():""}
-function extractQuestion(t){let m=String(t).match(/Next question:\s*([^\n]+)/i);return m?m[1].trim():""}
-function stripMarkdown(s){return String(s).replace(/\*\*/g,"").replace(/###/g,"").replace(/##/g,"").replace(/`/g,"").replace(/➡/g,"→")}
-function countErr(t){return (String(t).match(/error|mistake|incorrect|debe|cambio|corrección|mejor/gi)||[]).length}
-function addBubble(type,html){let c=document.getElementById("chat");let d=document.createElement("div");d.className="bubble "+type;d.innerHTML=html;c.appendChild(d);c.scrollTop=c.scrollHeight}
-function loadProgress(){return JSON.parse(localStorage.getItem("marioV17Pro")||'{"xp":0,"scores":[],"lastDay":"","streak":0}')}
-function saveProgress(p){localStorage.setItem("marioV17Pro",JSON.stringify(p));updateStats()}
-function addProgress(words,score,xp){let p=loadProgress();let today=new Date().toDateString();if(p.lastDay!==today){p.streak=(p.lastDay?p.streak+1:1);p.lastDay=today}p.xp+=xp;p.scores.push(score);saveProgress(p)}
-function updateStats(){let p=loadProgress();let avg=p.scores.length?Math.round(p.scores.reduce((a,b)=>a+b,0)/p.scores.length):0;document.getElementById("xp").textContent=p.xp;document.getElementById("streak").textContent=p.streak;document.getElementById("avg").textContent=avg;document.getElementById("level").textContent=levelFrom(avg)}
-function levelFrom(avg){return avg>=92?"B2+":avg>=85?"B2":avg>=75?"B1+":avg>=60?"B1":"A2"}
-function clearData(){localStorage.removeItem("marioV17Pro");updateStats();alert("Datos borrados.")}
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
-updateStats();updatePlan();newSound();
+import { speak, listenTo } from "./modules/voice.js";
+import { addProgress, updateDashboard, clearProgress, scoreLocal, loadProgress, levelFrom } from "./modules/progress.js";
+import { switchScreen, formatReply, visualCorrection, addBubble, escapeHtml } from "./modules/ui.js";
+import { askTeacher, extractCorrectSentence, extractNextQuestion, shortVoice } from "./modules/teacher.js";
+
+let lastFeedback = "";
+let lastSentence = "";
+let continuous = false;
+let session = { started: Date.now(), answers: 0, words: 0, errors: 0 };
+
+const questions = [
+  "What did you do today?",
+  "What did you do yesterday?",
+  "What are your plans for tomorrow?",
+  "Tell me about your work routine.",
+  "Describe your family.",
+  "What is difficult for you in English?",
+  "Tell me about your city.",
+  "What did you eat today?"
+];
+
+const examQuestions = [
+  "Describe a problem you solved recently.",
+  "Talk about a person who inspires you.",
+  "Describe your ideal vacation.",
+  "Explain why English is important for you.",
+  "Tell me about a difficult day at work."
+];
+
+const shadows = [
+  "I want to improve my American pronunciation.",
+  "Could you say that again, please?",
+  "Yesterday I worked all day and then I went home.",
+  "I feel more confident when I practice every day.",
+  "I would like to speak more naturally."
+];
+
+const sounds = [
+  { title: "TH sound: think / three / thank", tip: "Pon la punta de la lengua suavemente entre los dientes y sopla.", words: ["think", "three", "thank"] },
+  { title: "V sound: very / voice / vacation", tip: "Toca el labio inferior con los dientes superiores y vibra.", words: ["very", "voice", "vacation"] },
+  { title: "American R: car / work / teacher", tip: "Lleva la lengua hacia atrás sin tocar el paladar.", words: ["car", "work", "teacher"] },
+  { title: "Past ED: worked / played / wanted", tip: "Worked suena T, played suena D, wanted suena ID.", words: ["worked", "played", "wanted"] }
+];
+
+const ipa = {
+  think: "/θɪŋk/",
+  three: "/θriː/",
+  thank: "/θæŋk/",
+  very: "/ˈveri/",
+  voice: "/vɔɪs/",
+  vacation: "/veɪˈkeɪʃən/",
+  car: "/kɑr/",
+  work: "/wɝk/",
+  teacher: "/ˈtiːtʃɚ/",
+  worked: "/wɝkt/",
+  played: "/pleɪd/",
+  wanted: "/ˈwɑntɪd/"
+};
+
+function byId(id) { return document.getElementById(id); }
+function random(list) { return list[Math.floor(Math.random() * list.length)]; }
+function getText(id) { return byId(id).textContent; }
+
+function saveMistakes(reply) {
+  const found = [];
+  if (/has|have/i.test(reply)) found.push("have / has");
+  if (/past|went|watched|worked/i.test(reply)) found.push("past simple");
+  if (/continuous|watching|having/i.test(reply)) found.push("present/past continuous");
+  if (/pronunciation|sound/i.test(reply)) found.push("pronunciation");
+
+  const arr = JSON.parse(localStorage.getItem("ultimateMistakes") || "[]");
+  localStorage.setItem("ultimateMistakes", JSON.stringify([...arr, ...found].slice(-30)));
+  renderMistakes();
+}
+
+function renderMistakes() {
+  const arr = JSON.parse(localStorage.getItem("ultimateMistakes") || "[]");
+  byId("mistakeList").innerHTML = arr.length ? arr.map(x => "✓ " + escapeHtml(x)).join("<br>") : "Todavía no hay errores guardados.";
+}
+
+function clearMistakes() {
+  localStorage.removeItem("ultimateMistakes");
+  renderMistakes();
+}
+
+function setFeedback(target, reply, original = "") {
+  lastFeedback = reply;
+  lastSentence = extractCorrectSentence(reply);
+  byId(target).innerHTML = formatReply(reply);
+  if (target === "classFeedback") byId("visualCorrection").innerHTML = visualCorrection(original, lastSentence);
+  saveMistakes(reply);
+  session.answers++;
+  session.words += original.split(/\s+/).filter(Boolean).length;
+  session.errors += (reply.match(/error|mistake|incorrect|correction|mejor|debe/gi) || []).length;
+}
+
+async function correctClass() {
+  const text = byId("classAnswer").value.trim();
+  if (!text) return byId("classFeedback").textContent = "Primero responde.";
+  byId("classFeedback").textContent = "Mario está corrigiendo...";
+  try {
+    const score = scoreLocal(text);
+    const reply = await askTeacher(text, "Daily class correction");
+    setFeedback("classFeedback", reply, text);
+    addProgress(score, 35);
+    speak(shortVoice(reply), "es-ES", 0.92, () => { if (continuous) nextQuestion(); });
+  } catch (error) {
+    byId("classFeedback").textContent = error.message;
+  }
+}
+
+async function sendChat() {
+  const input = byId("chatInput");
+  const text = input.value.trim();
+  if (!text) return;
+  addBubble("user", "<b>You:</b> " + escapeHtml(text));
+  input.value = "";
+  addBubble("mario", "<b>Mario:</b> Thinking...");
+  try {
+    const score = scoreLocal(text);
+    const reply = await askTeacher(text, "Continuous conversation");
+    document.querySelector("#chat .bubble:last-child").innerHTML = "<b>Mario:</b> " + formatReply(reply);
+    lastFeedback = reply;
+    lastSentence = extractCorrectSentence(reply);
+    saveMistakes(reply);
+    addProgress(score, 25);
+    speak(shortVoice(reply), "es-ES", 0.92, () => { if (continuous) nextQuestion(); });
+  } catch (error) {
+    document.querySelector("#chat .bubble:last-child").innerHTML = "<b>Mario:</b> " + escapeHtml(error.message);
+  }
+}
+
+async function gradeExam() {
+  const text = byId("examAnswer").value.trim();
+  if (!text) return byId("examFeedback").textContent = "Primero responde.";
+  byId("examFeedback").textContent = "Mario está evaluando...";
+  try {
+    const score = scoreLocal(text);
+    const reply = await askTeacher(text, "B1/B2 speaking exam");
+    byId("examFeedback").innerHTML = formatReply(reply);
+    lastFeedback = reply;
+    lastSentence = extractCorrectSentence(reply);
+    addProgress(score, 50);
+    speak(shortVoice(reply), "es-ES");
+  } catch (error) {
+    byId("examFeedback").textContent = error.message;
+  }
+}
+
+function startContinuous() {
+  continuous = true;
+  switchScreen("conversation");
+  const q = random(questions);
+  addBubble("mario", "<b>Mario:</b> " + escapeHtml(q));
+  speak(q, "en-US");
+}
+
+function stopContinuous() {
+  continuous = false;
+  alert("Conversación continua detenida.");
+}
+
+function nextQuestion() {
+  const q = extractNextQuestion(lastFeedback) || random(questions);
+  addBubble("mario", "<b>Mario:</b> " + escapeHtml(q));
+  speak(q, "en-US");
+}
+
+function newClass() {
+  byId("classQuestion").textContent = random(questions);
+}
+
+function newExam() {
+  byId("examQuestion").textContent = random(examQuestions);
+}
+
+function newShadow() {
+  byId("shadowPhrase").textContent = random(shadows);
+}
+
+function checkShadow() {
+  const target = getText("shadowPhrase").toLowerCase().replace(/[^a-z\s]/g, "").trim();
+  const answer = byId("shadowAnswer").value.toLowerCase().replace(/[^a-z\s]/g, "").trim();
+  if (!answer) return byId("shadowFeedback").textContent = "Primero repite la frase.";
+  const targetWords = target.split(/\s+/);
+  const answerWords = answer.split(/\s+/);
+  const hits = targetWords.filter(w => answerWords.includes(w)).length;
+  const score = Math.round((hits / targetWords.length) * 100);
+  byId("shadowFeedback").textContent = `Coincidencia: ${score}%\nFrase correcta: ${getText("shadowPhrase")}\nRepite copiando ritmo, pausa y entonación.`;
+  addProgress(score, 15);
+  speak(byId("shadowFeedback").textContent, "es-ES");
+}
+
+function renderWordLab(words) {
+  byId("wordLab").innerHTML = words.map(w =>
+    `<span class="word"><b>${w}</b><small>${ipa[w] || ""}</small><button data-word="${w}">🔊</button></span>`
+  ).join("");
+  document.querySelectorAll("[data-word]").forEach(btn => {
+    btn.addEventListener("click", () => speak(btn.dataset.word, "en-US", 0.75));
+  });
+}
+
+function newSound() {
+  const s = random(sounds);
+  byId("soundTitle").textContent = s.title;
+  byId("soundTip").textContent = s.tip;
+  renderWordLab(s.words);
+}
+
+function updatePlan() {
+  const p = loadProgress();
+  const avg = p.scores.length ? Math.round(p.scores.reduce((a,b)=>a+b,0) / p.scores.length) : 0;
+  const mistakes = JSON.parse(localStorage.getItem("ultimateMistakes") || "[]").slice(-5).join(", ") || "past simple, connectors, pronunciation";
+  const plan = `🎯 Plan personalizado Ultimate 2026
+
+Nivel actual: ${levelFrom(avg)}
+Promedio: ${avg}%
+Errores recientes: ${mistakes}
+
+Esta semana:
+1. Practica 5 respuestas largas.
+2. Repite cada frase correcta 3 veces.
+3. Haz shadowing 5 minutos.
+4. Usa conectores: then, after that, because.
+5. Repasa tus errores recientes.`;
+  byId("planBox").textContent = plan;
+  return plan;
+}
+
+function showSummary() {
+  const mins = Math.max(1, Math.round((Date.now() - session.started) / 60000));
+  const msg = `🏆 Resumen Ultimate 2026
+
+Tiempo: ${mins} minuto(s)
+Respuestas: ${session.answers}
+Palabras practicadas: ${session.words}
+Errores detectados: ${session.errors}
+
+Próxima meta: respuestas más largas, mejor uso del pasado y pronunciación más clara.`;
+  byId("summaryBox").textContent = msg;
+  return msg;
+}
+
+async function testApi() {
+  byId("apiStatus").textContent = "Probando conexión...";
+  try {
+    const reply = await askTeacher("Hello Mario, this is a test.", "API test");
+    byId("apiStatus").textContent = "✅ Conexión correcta:\n" + reply;
+    speak("Conexión correcta. Mario Coach AI Ultimate 2026 está funcionando.", "es-ES");
+  } catch (error) {
+    byId("apiStatus").textContent = "❌ " + error.message;
+  }
+}
+
+function installApp() {
+  alert("Para instalar en Android: Chrome ⋮ → Agregar a pantalla principal.");
+}
+
+function bindEvents() {
+  document.querySelectorAll(".tabs button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      switchScreen(btn.dataset.screen);
+      if (btn.dataset.screen === "plan") updatePlan();
+      if (btn.dataset.screen === "summary") showSummary();
+      if (btn.dataset.screen === "mistakes") renderMistakes();
+    });
+  });
+
+  byId("btnIntro").onclick = () => speak("Hi Mario! Welcome to Mario Coach AI Ultimate 2026. I am your personal American English teacher.", "en-US");
+  byId("btnInstall").onclick = installApp;
+  byId("btnStartClass").onclick = () => { switchScreen("class"); newClass(); speak(getText("classQuestion"), "en-US"); };
+  byId("btnContinuous").onclick = startContinuous;
+  byId("btnListenQuestion").onclick = () => speak(getText("classQuestion"), "en-US");
+  byId("btnSpeakClass").onclick = () => listenTo("classAnswer", scoreLocal);
+  byId("btnCorrectClass").onclick = correctClass;
+  byId("btnNewClass").onclick = newClass;
+  byId("btnSpeakFeedback").onclick = () => lastFeedback ? speak(shortVoice(lastFeedback), "es-ES") : alert("Primero hacé una corrección.");
+  byId("btnRepeat").onclick = () => lastSentence ? speak(lastSentence, "en-US", 0.78) : alert("No encontré frase correcta.");
+  byId("btnNext").onclick = nextQuestion;
+  byId("btnSpeakChat").onclick = () => listenTo("chatInput", scoreLocal);
+  byId("btnSendChat").onclick = sendChat;
+  byId("btnStopContinuous").onclick = stopContinuous;
+  byId("btnNewExam").onclick = newExam;
+  byId("btnListenExam").onclick = () => speak(getText("examQuestion"), "en-US");
+  byId("btnSpeakExam").onclick = () => listenTo("examAnswer", scoreLocal);
+  byId("btnGradeExam").onclick = gradeExam;
+  byId("btnNewShadow").onclick = newShadow;
+  byId("btnShadowSlow").onclick = () => speak(getText("shadowPhrase"), "en-US", 0.72);
+  byId("btnShadowNormal").onclick = () => speak(getText("shadowPhrase"), "en-US", 1);
+  byId("btnSpeakShadow").onclick = () => listenTo("shadowAnswer", scoreLocal);
+  byId("btnCheckShadow").onclick = checkShadow;
+  byId("btnNewSound").onclick = newSound;
+  byId("btnSoundExample").onclick = () => speak(getText("soundTitle"), "en-US", 0.75);
+  byId("btnSoundExplain").onclick = () => speak(getText("soundTip"), "es-ES");
+  byId("btnClearMistakes").onclick = clearMistakes;
+  byId("btnUpdatePlan").onclick = updatePlan;
+  byId("btnSpeakPlan").onclick = () => speak(updatePlan(), "es-ES");
+  byId("btnUpdateSummary").onclick = showSummary;
+  byId("btnSpeakSummary").onclick = () => speak(showSummary(), "es-ES");
+  byId("btnTestApi").onclick = testApi;
+  byId("btnClearData").onclick = () => { clearProgress(); alert("Datos borrados."); };
+}
+
+bindEvents();
+updateDashboard();
+updatePlan();
+newSound();
